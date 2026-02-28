@@ -121,26 +121,53 @@ router.post('/register', async (req, res) => {
 
 
 
-router.post('/login',(req,res) => {
-    User.findOne({email:req.body.email})
+router.post('/login', async (req, res) => {
+    try {
+        let collection = "users";
 
-    .then((user)=>{
-        if(!user)
-        { 
-            return res.status(201).send({auth:false,token:'No User Found Register First'})
-        }
-        else{
-            const passIsvalid = bcrypt.compareSync(req.body.password,user.password);
-            if(!passIsvalid) return res.status(201).send({auth:false,token:'Invalid Password'});
-            let token = jwt.sign({id:user._id},config.secert,{expiresIn:86400})
-            return res.status(200).send({auth:true,token, user});
+        // find user by email
+        let userData = await getData(collection, { email: req.body.email });
 
+        if (userData.length === 0) {
+            return res.status(404).send({
+                auth: false,
+                message: "No user found. Please register first."
+            });
         }
 
-    })
-    .catch((err)=>{
-        return res.status(500).send({auth:false,token:'There is problem while login'});
-    });
+        let user = userData[0];
+
+        // compare password
+        const passIsValid = bcrypt.compareSync(req.body.password, user.password);
+
+        if (!passIsValid) {
+            return res.status(401).send({
+                auth: false,
+                message: "Invalid password"
+            });
+        }
+
+        // create token
+        let token = jwt.sign(
+            { id: user._id },
+            config.secret,   // make sure spelling is correct (not secert)
+            { expiresIn: 86400 } // 24 hours
+        );
+
+        return res.status(200).send({
+            auth: true,
+            token: token,
+            user: user
+        });
+
+    } catch (err) {
+        return res.status(500).send({
+            auth: false,
+            message: "There was a problem logging in",
+            error: err.message
+        });
+    }
+});
         
         
         
@@ -154,12 +181,12 @@ router.post('/login',(req,res) => {
     //         return res.status(200).send({auth:true,token});
     //     }
     // })
-})
+
 
 
 //userInfo
-router.get('/userInfo',(req,res) => {
-    let token = req.headers['x-access-token']
+// router.get('/userInfo',(req,res) => {
+//     let token = req.headers['x-access-token']
     // if(!token) return res.status(201).send({auth:false,token:'No Token Provided'});
     // jwt.verify(token,config.secert,(err,data) => {
     //     if(err) return res.status(201).send({auth:false,token:'Invalid Token'});
@@ -171,26 +198,26 @@ router.get('/userInfo',(req,res) => {
 
     // jwt.verify(token,config.secert)
 
-        if(!token) {
-            return res.status(201).send({auth:false,token:'No Token Provided'});
-        }
-        else{
-            jwt.verify(token,config.secert,(err, data) => {
-                if (err) {
-                  console.log(err);
-                  return res.status(201).send({auth:false,token:'Invalid Token'});
-                }else{
-                    User.findById(data.id)
-                        .then((user) => {res.send(user)});
+        // if(!token) {
+        //     return res.status(201).send({auth:false,token:'No Token Provided'});
+        // }
+        // else{
+        //     jwt.verify(token,config.secert,(err, data) => {
+        //         if (err) {
+        //           console.log(err);
+        //           return res.status(201).send({auth:false,token:'Invalid Token'});
+        //         }else{
+        //             User.findById(data.id)
+        //                 .then((user) => {res.send(user)});
                     // res.send(user);
                     // console.log(user);
                     // sessionStorage.setItem('userInfo',user);
 
-                }
+    //             }
 
-        }
-            )
-    }
+    //     }
+    //         )
+    // }
 
 
     // .catch((err) => {
@@ -202,6 +229,44 @@ router.get('/userInfo',(req,res) => {
         
         
 
-})
+// })
+
+
+
+router.get('/userInfo', async (req, res) => {
+
+    let token = req.headers['x-access-token'];
+
+    if (!token) {
+        return res.status(401).send({
+            auth: false,
+            message: "No Token Provided"
+        });
+    }
+
+    jwt.verify(token, config.secret, async (err, decoded) => {
+
+        if (err) {
+            return res.status(401).send({
+                auth: false,
+                message: "Invalid Token"
+            });
+        }
+
+        try {
+            let collection = "users";
+            let userData = await getData(collection, { _id: decoded.id });
+
+            if (userData.length === 0) {
+                return res.status(404).send("User not found");
+            }
+
+            res.status(200).send(userData[0]);
+
+        } catch (error) {
+            res.status(500).send(error.message);
+        }
+    });
+});
 
 module.exports = router;

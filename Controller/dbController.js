@@ -2,6 +2,7 @@ let mongo = require('mongodb');
 let {MongoClient} = require('mongodb');
 let mongoUrl = "mongodb+srv://vincentkiathadi:YIfp7gktEi2USAWW@cluster0.nt2oupy.mongodb.net/?retryWrites=true&w=majority";
 let client = new MongoClient(mongoUrl);
+const mongoose = require('mongoose');
 
 async function dbConnect(){
     await client.connect();
