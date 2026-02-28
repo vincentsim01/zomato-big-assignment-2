@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "juststart":"nodemon app.js"
+    "juststart": "nodemon app.js"
   },
   "keywords": [
     "zomato",
@@ -15,11 +15,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.2",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^1.20.4",
     "bootstrap": "^5.3.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.6.1",
     "express": "^4.18.2",
-    "mongodb": "^6.2.0"
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^6.2.0",
+    "mongoose": "^9.2.3",
+    "nodemon": "^3.1.14",
+    "router": "^2.2.0"
   }
 }

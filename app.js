@@ -5,11 +5,16 @@ let Mongo = require('mongodb');
 let bodyParser = require('body-parser');
 let cors = require('cors');
 let {dbConnect,getData,postData,updateData,deleteData, getDataSort, getDataPagi} = require('./Controller/dbController');
+const AuthController = require('./Controller/authController');
 
+app.use(cors());
 //middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
-app.use(cors());
+
+
+app.use('/api/auth', AuthController);
+
 
 app.get('/',(req,res) => {
     res.send("Hiii From Express")
@@ -20,6 +25,13 @@ app.get('/',(req,res) => {
 app.get('/location', async(req,res) =>{
     let query = {};
     let collection = "location";
+    let output = await getData(collection,query);
+    res.send(output)
+});
+
+app.get('/users', async(req,res) =>{
+    let query = {};
+    let collection = "user";
     let output = await getData(collection,query);
     res.send(output)
 });
@@ -270,6 +282,14 @@ app.post('/placeOrder',async(req,res) => {
 })
 
 
+app.post('/register',async(req,res) => {
+    let body = req.body;
+    let collection = 'users';
+    let response = await postData(collection,body);
+    res.send(response)
+})
+
+
 
 
 //menu wrt to id {"id":[4,8,11]}
@@ -283,6 +303,7 @@ app.post('/menuDetails',async(req,res) => {
         res.send('Please pass data in from of array')
     }
 })
+
 
 //update order status
 app.put('/updateOrder',async(req,res) => {
