@@ -154,6 +154,8 @@ router.post('/login', async (req, res) => {
             { expiresIn: 86400 } // 24 hours
         );
 
+        res.setHeader("x-access-token", token);
+
         return res.status(200).send({
             auth: true,
             token: token,
@@ -184,40 +186,40 @@ router.post('/login', async (req, res) => {
 
 
 
-//userInfo
+
 // router.get('/userInfo',(req,res) => {
 //     let token = req.headers['x-access-token']
-    // if(!token) return res.status(201).send({auth:false,token:'No Token Provided'});
-    // jwt.verify(token,config.secert,(err,data) => {
-    //     if(err) return res.status(201).send({auth:false,token:'Invalid Token'});
-    //     User.findById(data.id,(err,user) => {
-    //         res.send(user)
-    //     })
-    // })
+//     if(!token) return res.status(201).send({auth:false,token:'No Token Provided'});
+//     jwt.verify(token,config.secret,(err,data) => {
+//         if(err) return res.status(201).send({auth:false,token:'Invalid Token'});
+//         User.findById(data.id,(err,user) => {
+//             res.send(user)
+//         })
+//     })
 
 
-    // jwt.verify(token,config.secert)
+//     jwt.verify(token,config.secret)
 
-        // if(!token) {
-        //     return res.status(201).send({auth:false,token:'No Token Provided'});
-        // }
-        // else{
-        //     jwt.verify(token,config.secert,(err, data) => {
-        //         if (err) {
-        //           console.log(err);
-        //           return res.status(201).send({auth:false,token:'Invalid Token'});
-        //         }else{
-        //             User.findById(data.id)
-        //                 .then((user) => {res.send(user)});
-                    // res.send(user);
-                    // console.log(user);
-                    // sessionStorage.setItem('userInfo',user);
+//         if(!token) {
+//             return res.status(201).send({auth:false,token:'No Token Provided'});
+//         }
+//         else{
+//             jwt.verify(token,config.secret,(err, data) => {
+//                 if (err) {
+//                   console.log(err);
+//                   return res.status(201).send({auth:false,token:'Invalid Token'});
+//                 }else{
+//                     User.findById(data.id)
+//                         .then((user) => {res.send(user)});
+//                     res.send(user);
+//                     console.log(user);
+//                     sessionStorage.setItem('userInfo',user);
 
-    //             }
+//                 }
 
-    //     }
-    //         )
-    // }
+//         }
+//             )
+//     }
 
 
     // .catch((err) => {
@@ -236,6 +238,8 @@ router.post('/login', async (req, res) => {
 router.get('/userInfo', async (req, res) => {
 
     let token = req.headers['x-access-token'];
+
+    // let token = sessionStorage.getItem('ltk');
 
     if (!token) {
         return res.status(401).send({

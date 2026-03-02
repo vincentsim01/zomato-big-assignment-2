@@ -282,12 +282,12 @@ app.post('/placeOrder',async(req,res) => {
 })
 
 
-app.post('/register',async(req,res) => {
-    let body = req.body;
-    let collection = 'users';
-    let response = await postData(collection,body);
-    res.send(response)
-})
+// app.post('/register',async(req,res) => {
+//     let body = req.body;
+//     let collection = 'users';
+//     let response = await postData(collection,body);
+//     res.send(response)
+// })
 
 
 
