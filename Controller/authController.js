@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
+const verifyToken = require('./middleware/auth');
+const isAdmin = require('./middleware/isAdmin');
 // const User = require('../model/userSchema');
 const router = express.Router();
 let mongo = require('mongodb');
@@ -31,7 +33,7 @@ router.use(bodyParser.json());
 
 // })
 
-router.get('/users', async(req,res) => {
+router.get('/users',verifyToken, async(req,res) => {
     let query = {};
     let restIds = Number(req.query.restId);
     let collection = "users";
