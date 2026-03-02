@@ -236,41 +236,31 @@ router.post('/login', async (req, res) => {
 
 
 router.get('/userInfo', async (req, res) => {
-
     let token = req.headers['x-access-token'];
 
-    // let token = sessionStorage.getItem('ltk');
-
     if (!token) {
-        return res.status(401).send({
-            auth: false,
-            message: "No Token Provided"
-        });
+        return res.status(401).send({ auth: false, message: "No Token Provided" });
     }
 
     jwt.verify(token, config.secret, async (err, decoded) => {
-
         if (err) {
-            return res.status(401).send({
-                auth: false,
-                message: "Invalid Token"
-            });
+            return res.status(401).send({ auth: false, message: "Invalid Token" });
         }
 
         try {
+            const { ObjectId } = require('mongodb');
             let collection = "users";
-            let userData = await getData(collection, { _id: decoded.id });
+            let userData = await getData(collection, { _id: new ObjectId(decoded.id) });
 
             if (userData.length === 0) {
-                return res.status(404).send("User not found");
+                return res.status(404).send({ message: "User not found" });
             }
 
             res.status(200).send(userData[0]);
 
         } catch (error) {
-            res.status(500).send(error.message);
+            res.status(500).send({ message: error.message });
         }
     });
 });
-
 module.exports = router;

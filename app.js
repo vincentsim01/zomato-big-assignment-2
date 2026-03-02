@@ -7,7 +7,11 @@ let cors = require('cors');
 let {dbConnect,getData,postData,updateData,deleteData, getDataSort, getDataPagi} = require('./Controller/dbController');
 const AuthController = require('./Controller/authController');
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  exposedHeaders: ['x-access-token'],
+  allowedHeaders: ['Content-Type', 'x-access-token']
+}));
 //middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
