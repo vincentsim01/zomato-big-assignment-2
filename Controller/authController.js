@@ -90,7 +90,7 @@ router.post('/register', async (req, res) => {
             email: req.body.email,
             password: hashpassword,
             phone: req.body.phone,
-            // role: "User"
+            role: "user"
         };
 
         let response = await postData(collection, data);
