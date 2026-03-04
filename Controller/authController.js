@@ -33,7 +33,7 @@ router.use(bodyParser.json());
 
 // })
 
-router.get('/users',verifyToken, async(req,res) => {
+router.get('/users',verifyToken, isAdmin, async(req,res) => {
     let query = {};
     let restIds = Number(req.query.restId);
     let collection = "users";
@@ -151,7 +151,7 @@ router.post('/login', async (req, res) => {
 
         // create token
         let token = jwt.sign(
-            { id: user._id },
+            { id: user._id, role: user.role },
             config.secret,   // make sure spelling is correct (not secert)
             { expiresIn: 86400 } // 24 hours
         );
