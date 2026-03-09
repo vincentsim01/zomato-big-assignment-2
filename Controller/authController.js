@@ -42,6 +42,23 @@ router.get('/users',verifyToken, isAdmin, async(req,res) => {
     res.send(output);
 })
 
+router.put('/updateuser',verifyToken, isAdmin, async(req,res) => {
+    let collection = "users";
+    let condition = {"_id":new ObjectId(req.body._id)}
+
+    let hashpassword = bcrypt.hashSync(req.body.password, 8);
+    let data = {
+            name: req.body.name,
+            email: req.body.email,
+            password: hashpassword,
+            phone: req.body.phone,
+
+        };
+
+    let output = await updateData(collection,condition,data)
+    res.send(output)
+})
+
 
 // module.exports={
 //     try{
