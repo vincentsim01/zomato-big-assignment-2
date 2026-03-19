@@ -1,6 +1,7 @@
 let mongo = require('mongodb');
 let {MongoClient} = require('mongodb');
-let mongoUrl = "mongodb+srv://vincentkiathadi:YIfp7gktEi2USAWW@cluster0.nt2oupy.mongodb.net/?retryWrites=true&w=majority";
+let mongoUrl="mongodb://vincentkiathadi:YIfp7gktEi2USAWW@ac-rfi3xik-shard-00-00.nt2oupy.mongodb.net:27017,ac-rfi3xik-shard-00-01.nt2oupy.mongodb.net:27017,ac-rfi3xik-shard-00-02.nt2oupy.mongodb.net:27017/?ssl=true&replicaSet=atlas-4kcyjr-shard-0&authSource=admin&appName=Cluster0"
+// let mongoUrl = "mongodb+srv://vincentkiathadi:YIfp7gktEi2USAWW@cluster0.nt2oupy.mongodb.net/?retryWrites=true&w=majority";
 let client = new MongoClient(mongoUrl);
 const mongoose = require('mongoose');
 

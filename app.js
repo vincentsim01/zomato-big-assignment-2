@@ -71,6 +71,8 @@ app.get('/menu', async(req,res) =>{
     if(req.query.restaurant_id){
         query = {"restaurant_id":Number(req.query.restaurant_id)}
 
+    }else if(req.query.menu_type){
+        query = {"menu_type":req.query.menu_type}
     }
     let output = await getData(collection,query);
     res.send(output)
