@@ -336,12 +336,6 @@ app.delete('/deleteOrder',async(req,res) => {
 })
 
 
-app.delete('/deleteuser',async(req,res) => {
-    let collection = "users";
-    let condition = {"_id":new ObjectId(req.body._id)}
-    let output = await deleteData(collection,condition)
-    res.send(output)
-})
 
 
 

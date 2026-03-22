@@ -80,6 +80,14 @@ router.patch('/updateuser', verifyToken, isAdmin, async (req, res) => {
 });
 
 
+router.delete('/deleteuser',verifyToken, isAdmin, async(req,res) => {
+    let collection = "users";
+    let condition = {"_id":new ObjectId(req.body._id)}
+    let output = await deleteData(collection,condition)
+    res.send(output)
+})
+
+
 
 
 
