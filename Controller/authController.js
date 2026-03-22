@@ -7,6 +7,7 @@ const verifyToken = require('./middleware/auth');
 const isAdmin = require('./middleware/isAdmin');
 // const User = require('../model/userSchema');
 const router = express.Router();
+const { ObjectId } = require('mongodb');
 let mongo = require('mongodb');
 let {MongoClient} = require('mongodb');
 let {dbConnect,getData,postData,updateData,deleteData, getDataSort, getDataPagi} = require('./dbController');
@@ -42,22 +43,77 @@ router.get('/users',verifyToken, isAdmin, async(req,res) => {
     res.send(output);
 })
 
-router.put('/updateuser',verifyToken, isAdmin, async(req,res) => {
-    let collection = "users";
-    let condition = {"_id":new ObjectId(req.body._id)}
 
-    let hashpassword = bcrypt.hashSync(req.body.password, 8);
-    let data = {
-            name: req.body.name,
-            email: req.body.email,
-            password: hashpassword,
-            phone: req.body.phone,
+router.patch('/updateuser', verifyToken, isAdmin, async (req, res) => {
+    try {
+        const collection = "users";
+        const condition = { "_id": new ObjectId(req.body._id) };
 
-        };
+        const allowedFields = ["name", "email", "phone"];
+        let updateFields = {};
+        allowedFields.forEach(field => {
+            if (req.body[field] !== undefined) updateFields[field] = req.body[field];
+        });
 
-    let output = await updateData(collection,condition,data)
-    res.send(output)
-})
+        if (Object.keys(updateFields).length === 0) {
+            return res.status(400).send({ message: "No fields to update" });
+        }
+
+            let data = {
+                $set: updateFields
+            };
+
+            let output = await updateData(collection,condition,data)
+
+        const updatedUser = output;
+
+        if (!updatedUser) {
+            return res.status(404).send({ message: "User not found" });
+        }
+
+        res.send(updatedUser);
+
+    } catch (err) {
+        console.error("Update error:", err);
+        res.status(500).send({ response: "Server error" });
+    }
+});
+
+
+
+
+
+// router.patch('/updateuser',verifyToken, isAdmin, async(req,res) => {
+//     let collection = "users";
+//     let condition = {"_id":new ObjectId(req.body._id)}
+
+
+//     let data = {
+
+//             $set: {
+//                 name: req.body.name,
+//                 email: req.body.email,
+//                 phone: req.body.phone
+//             }
+
+
+//         };
+
+//     let output = await updateData(collection,condition,data)
+//     res.send(output)
+// })
+
+
+
+
+    // let hashpassword = bcrypt.hashSync(req.body.password, 8);
+
+            // name: req.body.name,
+            // email: req.body.email,
+            // password: hashpassword,
+            // phone: req.body.phone,
+
+
 
 
 // module.exports={

@@ -276,17 +276,17 @@ app.get('/orders',async(req,res) => {
 //placeOrder
 app.post('/placeOrder',async(req,res) => {
     let body = req.body;
-
-
     let collection = 'orders';
     let response = await postData(collection,body);
-
-    
     res.send(response)
-
-    
 })
 
+// app.post('/users ',async(req,res) => {
+//     let body = req.body;
+//     let collection = 'users';
+//     let response = await postData(collection,body);
+//     res.send(response)
+// })
 
 // app.post('/register',async(req,res) => {
 //     let body = req.body;
@@ -325,6 +325,8 @@ app.put('/updateOrder',async(req,res) => {
     res.send(output)
 })
 
+
+
 //delete order
 app.delete('/deleteOrder',async(req,res) => {
     let collection = "orders";
@@ -332,6 +334,15 @@ app.delete('/deleteOrder',async(req,res) => {
     let output = await deleteData(collection,condition)
     res.send(output)
 })
+
+
+app.delete('/deleteuser',async(req,res) => {
+    let collection = "users";
+    let condition = {"_id":new ObjectId(req.body._id)}
+    let output = await deleteData(collection,condition)
+    res.send(output)
+})
+
 
 
 
