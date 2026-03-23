@@ -281,6 +281,13 @@ app.post('/placeOrder',async(req,res) => {
     res.send(response)
 })
 
+app.post('/contactus',async(req,res) => {
+    let body = req.body;
+    let collection = 'contactus';
+    let response = await postData(collection,body);
+    res.send(response)
+})
+
 // app.post('/users ',async(req,res) => {
 //     let body = req.body;
 //     let collection = 'users';
